@@ -3,42 +3,45 @@ name: Java CI with Docker
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Checkout code from GitHub
-    - name: Checkout repository
+    # Checkout the code
+    - name: Checkout
       uses: actions/checkout@v3
 
-    # 2. Set up Java 17
-    - name: Set up JDK 17
+    # Set up Java 17
+    - name: Set up JDK
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    # 3. Build project using Maven
+    # Build the application
     - name: Build with Maven
       run: mvn clean package
 
-    # 4. Run Checkstyle (ensure checkstyle plugin is in pom.xml)
+    # Lint the code using Checkstyle
     - name: Run Checkstyle
       run: mvn checkstyle:check
 
-    # 5. Build Docker image from Dockerfile
-    - name: Build Docker Image
+    # Build the Docker image
+    - name: Build Docker image
       run: docker build -t hello-world-java .
 
-    # 6. Create artifacts folder for Docker image
-    - name: Create output directory
-      run: mkdir -p artifacts/docker
+    # Save the Docker image as a .tar file
+    - name: Save Docker image
+      run: |
+        mkdir -p artifacts/docker
+        docker save hello-world-java > artifacts/docker/hello-world-java.tar
 
-    # 7. Save Docker image as .tar to artifacts folder
-    - name: Save Docker image as .tar
-      run: docker save hello-world-java > artifacts/docker/hello-world-java.tar
+    # Upload the .tar file as an artifact (optional)
+    - name: Upload Docker image artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: docker-image
+        path: artifacts/docker/hello-world-java.tar
 
