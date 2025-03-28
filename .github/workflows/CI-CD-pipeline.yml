@@ -40,7 +40,7 @@ jobs:
 
     # Upload the .tar file as an artifact (optional)
     - name: Upload Docker image artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: docker-image
         path: artifacts/docker/hello-world-java.tar
