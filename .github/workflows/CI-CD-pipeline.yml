@@ -38,7 +38,7 @@ jobs:
         mkdir -p artifacts/docker
         docker save hello-world-java > artifacts/docker/hello-world-java.tar
 
-    # Upload the .tar file as an artifact (optional)
+    # Upload the .tar file as an artifact
     - name: Upload Docker image artifact
       uses: actions/upload-artifact@v4
       with:
